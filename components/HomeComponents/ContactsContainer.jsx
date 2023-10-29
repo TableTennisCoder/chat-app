@@ -72,7 +72,7 @@ const ContactsContainer = () => {
   }
 
   return (
-    <FlatList
+    <FlatList 
       data={userInfos}
       keyExtractor={(contact) => contact.id}
       renderItem={renderContacts}

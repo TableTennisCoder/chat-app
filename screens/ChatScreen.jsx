@@ -1,8 +1,14 @@
-import {StyleSheet, View, FlatList} from "react-native";
-import {useState, useEffect, useLayoutEffect} from "react";
-import {useNavigation} from "@react-navigation/native";
-import {db} from "../firebase";
-import {getAuth} from "firebase/auth";
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  KeyboardAvoidingView,
+  Keyboard,
+} from "react-native";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { db } from "../firebase";
+import { getAuth } from "firebase/auth";
 import {
   collection,
   addDoc,
@@ -12,11 +18,12 @@ import {
   orderBy,
 } from "firebase/firestore";
 
+import Background from "../components/ui/Background";
 import SendMessage from "../components/ChatComponents/SendMessage";
 import Message from "../components/ChatComponents/Message";
 import ProfileImageHeader from "../components/ChatComponents/ProfileImageHeader";
 
-const Chat = ({route}) => {
+const Chat = ({ route }) => {
   const userId = route.params.userInfos.id;
   const userName = route.params.userInfos.email;
   const avatar = route.params.userInfos.avatar;
@@ -25,6 +32,7 @@ const Chat = ({route}) => {
   const [roomId, setRoomId] = useState(null);
   const [userInput, setUserInput] = useState("");
   const [messages, setMessages] = useState([]);
+  const flatListRef = useRef(null);
 
   const navigation = useNavigation();
 
@@ -70,6 +78,7 @@ const Chat = ({route}) => {
     });
 
     setUserInput("");
+    Keyboard.dismiss();
   }
 
   // ***** RETREIVE REAL TIME UPDATES FROM FIRSTORE AND DISPLAY ***** //
@@ -101,25 +110,41 @@ const Chat = ({route}) => {
 
   // ***** DISPLAY THE MESSAGES ***** //
   function displayMessages(itemData) {
-    return <Message isMyMessage={itemData.item.sender === myId ? true : false}>{itemData.item.text}</Message>;
+    return (
+      <Message isMyMessage={itemData.item.sender === myId ? true : false}>
+        {itemData.item.text}
+      </Message>
+    );
   }
 
   return (
-    <View style={styles.wrapper}>
-      <FlatList
-        data={messages}
-        keyExtractor={(message) => message.timestamp}
-        renderItem={displayMessages}
-        style={styles.chatSection}
-      />
-      <View style={styles.sendSection}>
-        <SendMessage
-          value={userInput}
-          onChangeText={(text) => setUserInput(text)}
-          onPress={addMessageToFirestore}
-        />
+    <Background>
+      <View style={styles.wrapper}>
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior="padding"
+          keyboardVerticalOffset={70}
+        >
+          <FlatList
+            ref={flatListRef}
+            data={messages}
+            keyExtractor={(message) => message.timestamp}
+            renderItem={displayMessages}
+            style={styles.chatSection}
+            onContentSizeChange={() =>
+              flatListRef.current.scrollToEnd({ animated: true })
+            }
+          />
+          <View style={styles.sendSection}>
+            <SendMessage
+              value={userInput}
+              onChangeText={(text) => setUserInput(text)}
+              onPress={addMessageToFirestore}
+            />
+          </View>
+        </KeyboardAvoidingView>
       </View>
-    </View>
+    </Background>
   );
 };
 
@@ -128,7 +153,6 @@ export default Chat;
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: "white",
     paddingHorizontal: 20,
     paddingTop: 20,
     paddingBottom: 30,
@@ -137,7 +161,9 @@ const styles = StyleSheet.create({
   chatSection: {
     flex: 1,
   },
-  sendSection: {},
+  sendSection: {
+    paddingTop: 20,
+  },
 });
 
 // // Create a query to find chat rooms where the user is a participant

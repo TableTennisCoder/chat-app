@@ -1,17 +1,12 @@
-import {
-  StyleSheet,
-  View,
-  Image,
-  KeyboardAvoidingView,
-  Text,
-} from "react-native";
-import {useState} from "react";
+import { StyleSheet, View, KeyboardAvoidingView, Text } from "react-native";
+import { useState } from "react";
 
-import {auth, db} from "../firebase";
-import {createUserWithEmailAndPassword} from "firebase/auth";
-import {setDoc, doc} from "firebase/firestore";
-import {useNavigation} from "@react-navigation/native";
+import { auth, db } from "../firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { setDoc, doc } from "firebase/firestore";
+import { useNavigation } from "@react-navigation/native";
 
+import Background from "../components/ui/Background";
 import CustomInput from "../components/ui/Inputs/CustomInput";
 import PrimaryButton from "../components/ui/Buttons/PrimaryButton";
 import TertiaryButton from "../components/ui/Buttons/TertiaryButton";
@@ -50,32 +45,30 @@ const SignupScreen = () => {
 
   return (
     <KeyboardAvoidingView style={styles.loginScreen} behavior="height">
-      <View style={styles.loginScreen__content}>
-        <Text style={styles.heading}>Sign Up</Text>
-        <CustomInput
-          placeholder="Email"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-          keyboardType="email-address"
-        />
-        <CustomInput
-          placeholder="Password"
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          isPassword
-        />
-        <PrimaryButton onPress={handleSignup}>Sign Up</PrimaryButton>
-        <TertiaryButton
-          text="Already have an account?"
-          buttonCaption="Login"
-          onPress={() => navigation.replace("Login")}
-          style={{marginTop: 15}}
-        />
-      </View>
-      <Image
-        source={require("../assets/images/loginSignup.png")}
-        style={styles.image}
-      />
+      <Background>
+        <View style={styles.loginScreen__content}>
+          <Text style={styles.heading}>REGISTER</Text>
+          <CustomInput
+            placeholder="Email"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+            keyboardType="email-address"
+          />
+          <CustomInput
+            placeholder="Password"
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            isPassword
+          />
+          <PrimaryButton onPress={handleSignup}>REGISTER NOW</PrimaryButton>
+          <TertiaryButton
+            text="Already have an account?"
+            buttonCaption="Login"
+            onPress={() => navigation.replace("Login")}
+            style={{ marginTop: 15 }}
+          />
+        </View>
+      </Background>
     </KeyboardAvoidingView>
   );
 };
@@ -85,7 +78,7 @@ export default SignupScreen;
 const styles = StyleSheet.create({
   loginScreen: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "black",
     alignItems: "center",
   },
   image: {
@@ -95,14 +88,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 35,
-    marginTop: 50,
+    marginTop: 60,
     marginBottom: 15,
-    gap: 15,
+    gap: 20,
   },
   heading: {
-    fontFamily: "Fredoka-Bold",
     fontSize: 28,
-    color: "#335151",
+    color: "white",
     marginBottom: 10,
+    fontFamily: "BioSans-Bold",
   },
 });

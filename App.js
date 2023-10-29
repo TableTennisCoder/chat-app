@@ -6,6 +6,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { DarkTheme } from '@react-navigation/native';
 
 import { auth } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -27,10 +28,10 @@ export default function App() {
 
   // Load Fonts
   const [fontsLoaded] = useFonts({
-    "Fredoka-Regular": require('./assets/fonts/Fredoka-Regular.ttf'),
-    "Fredoka-Medium": require('./assets/fonts/Fredoka-Medium.ttf'),
-    "Fredoka-SemiBold": require('./assets/fonts/Fredoka-SemiBold.ttf'),
-    "Fredoka-Bold": require('./assets/fonts/Fredoka-Bold.ttf'),
+    "BioSans-Light": require("./assets/fonts/BioSans-Light.otf"),
+    "BioSans-Regular": require("./assets/fonts/BioSans-Regular.otf"),
+    "BioSans-SemiBold": require("./assets/fonts/BioSans-SemiBold.otf"),
+    "BioSans-Bold": require("./assets/fonts/BioSans-Bold.otf"),
   })
 
   const [authData, setAuthData] = useState(null);
@@ -79,7 +80,7 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={DarkTheme}>
       {authData ? (
         <Stack.Navigator>
           <Stack.Screen name="HomeScreen" component={BottomTabs} options={{headerShown: false}}/>

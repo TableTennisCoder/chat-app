@@ -1,17 +1,20 @@
-import {View, Text, Button, StyleSheet, FlatList} from "react-native";
-import {useEffect, useState} from "react";
-import {auth} from "../firebase";
-import {getAuth, signOut} from "firebase/auth";
-import {useNavigation} from "@react-navigation/native";
-import {AntDesign} from "@expo/vector-icons";
+import { View, Text, Button, StyleSheet } from "react-native";
+import { useEffect, useState } from "react";
+import { auth } from "../firebase";
+import { getAuth, signOut } from "firebase/auth";
+import { useNavigation } from "@react-navigation/native";
+import { AntDesign } from "@expo/vector-icons";
 
-import Searchbar from "../components/HomeComponents/Searchbar";
+import { SearchBar } from "@rneui/themed";
 import ContactsContainer from "../components/HomeComponents/ContactsContainer";
 import ModalNewFriend from "../components/HomeComponents/ModalNewFriend";
+import Background from "../components/ui/Background";
+
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [user, setUser] = useState(null);
+  const [userInput, setUserInput] = useState("");
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -27,13 +30,14 @@ const HomeScreen = () => {
   };
 
   return (
+    <Background>
     <View style={styles.wrapper}>
       <View style={styles.wrapper__header}>
-        <Text style={styles.header__caption}>Messages</Text>
+        <Text style={styles.header__caption}>Chats</Text>
         <AntDesign
           name="adduser"
           size={30}
-          color="#335151"
+          color="white"
           onPress={() => setIsVisible(true)}
         />
         <ModalNewFriend
@@ -42,20 +46,25 @@ const HomeScreen = () => {
           getRoomIdHandler={(id) => setRoomId(id)}
         />
       </View>
-      <Searchbar icon="search1" placeholder="Search" />
-      <ContactsContainer />
-
-      <Text>{user?.email}</Text>
-      <Text>{user?.uid}</Text>
+      <SearchBar
+        placeholder="Suchen"
+        value={userInput}
+        onChangeText={(text) => setUserInput(text)}
+        platform="ios"
+        containerStyle={{ backgroundColor: "transparent" }}
+        inputContainerStyle={{ backgroundColor: "#27282A" }}
+        inputStyle={{ color: "white" }}
+      />
+      <ContactsContainer/>
       <Button title="Ausloggen" onPress={handleLogout} />
     </View>
+    </Background>
   );
 };
 
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: "white",
     paddingHorizontal: 20,
     paddingTop: 40,
   },
@@ -64,12 +73,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginHorizontal: 10,
-    marginBottom: 20,
   },
   header__caption: {
-    color: "#335151",
-    fontFamily: "Fredoka-SemiBold",
+    color: "white",
     fontSize: 32,
+    fontFamily: "BioSans-Bold",
   },
 });
 

@@ -30,7 +30,6 @@ const styles = StyleSheet.create({
   },
   input: {
     color: "#335151",
-    fontFamily: "Fredoka-Medium",
     fontSize: 16,
   },
 });

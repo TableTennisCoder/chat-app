@@ -25,16 +25,17 @@ const styles = StyleSheet.create({
   myMessage: {
     alignSelf: "flex-end",
     borderBottomRightRadius: 0,
-    backgroundColor: "#E3EAF5",
+    backgroundColor: "#27282A",
   },
   usersMessage: {
     alignSelf: "flex-start",
     borderBottomLeftRadius: 0,
-    backgroundColor: "#EDF0F7",
+    backgroundColor: "black",
+    borderWidth: 1,
+    borderColor: "#27282A"
   },
   message__text: {
-    color: "#335151",
+    color: "white",
     fontSize: 16,
-    fontFamily: "Fredoka-Regular",
   },
 });

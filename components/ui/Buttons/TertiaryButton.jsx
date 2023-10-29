@@ -1,5 +1,6 @@
 import {StyleSheet, Text, View, Pressable} from "react-native";
 import React from "react";
+import { processFontFamily } from "expo-font";
 
 export default function TertiaryButton({text, buttonCaption, onPress, style}) {
   return (
@@ -17,13 +18,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   text: {
-    fontFamily: "Fredoka-Medium",
     fontSize: 18,
-    color: "#93A2A2"
+    color: "#8C8C92",
+    fontFamily: "BioSans-Regular"
   },
   caption: {
-    fontFamily: "Fredoka-SemiBold",
     fontSize: 18,
-    color: "#28C8C8"
+    color: "white",
+    fontFamily: "BioSans-Bold"
   }
 });

@@ -6,7 +6,7 @@ export default function CustomInput({placeholder, value, onChangeText, keyboardT
       <TextInput
         style={styles.input}
         placeholder={placeholder}
-        placeholderTextColor="#93A2A2"
+        placeholderTextColor="#8C8C92"
         value={value}
         onChangeText={onChangeText}
         keyboardType={keyboardType}
@@ -19,15 +19,17 @@ export default function CustomInput({placeholder, value, onChangeText, keyboardT
 const styles = StyleSheet.create({
   inputContainer: {
     justifyContent: 'center',
-    backgroundColor: "#EDF0F7",
-    borderRadius: 50,
-    height: 60,
+    backgroundColor: "black",
+    borderWidth: 1.,
+    borderColor: "white",
+    borderRadius: 3,
+    height: 50,
     width: 300,
-    paddingHorizontal: 25
+    paddingHorizontal: 15,
   },
   input: {
-    color: "#335151",
-    fontFamily: 'Fredoka-Medium',
-    fontSize: 18
+    color: "white",
+    fontSize: 16,
+    fontFamily: "BioSans-Regular"
   },
 });

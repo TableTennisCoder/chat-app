@@ -23,15 +23,13 @@ export default SendMessage;
 
 const styles = StyleSheet.create({
   messagebox: {
-    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: "#EDF0F7",
-    borderRadius: 50,
+    justifyContent: "center",
+    backgroundColor: "transparent",
     position: "relative",
   },
   sendButton: {
-    backgroundColor: "#28C8C8",
+    backgroundColor: "transparent",
     width: 45,
     height: 45,
     borderRadius: 40,
@@ -39,6 +37,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     zIndex: 2,
     position: "absolute",
-    right: 10,
+    right: 20
   },
 });

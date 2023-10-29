@@ -1,5 +1,6 @@
 import {StyleSheet, Text, View, Image, Pressable} from "react-native";
 import {useNavigation} from "@react-navigation/native";
+import { processFontFamily } from "expo-font";
 
 const Contact = ({contact}) => {
   const navigation = useNavigation();
@@ -32,7 +33,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     gap: 10,
-    marginBottom: 25,
+    marginBottom: 15,
   },
   image: {
     width: 60,
@@ -41,15 +42,20 @@ const styles = StyleSheet.create({
   },
   messageContainer: {
     flex: 1,
+    borderWidth: 1,
+    paddingBottom: 10,
+    borderBottomColor: "#27282A"
   },
   messageWrapper: {
     width: "100%",
   },
   name: {
-    fontFamily: "Fredoka-SemiBold",
     marginBottom: 3,
+    color: "white",
+    fontFamily: "BioSans-Bold"
   },
   message: {
-    fontFamily: "Fredoka-Regular",
+    color: "#8C8C92",
+    fontFamily: "BioSans-Regular"
   },
 });

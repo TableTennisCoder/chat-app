@@ -17,16 +17,16 @@ const styles = StyleSheet.create({
   primaryButton: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: "#28C8C8",
-    borderRadius: 50,
-    height: 60,
+    backgroundColor: "white",
+    borderRadius: 6,
+    height: 50,
     width: 300
   },
 
   primaryButton__text: {
-    color: "white",
-    fontFamily: 'Fredoka-Medium',
-    fontSize: 22,
-    textAlign: 'center'
+    color: "black",
+    fontSize: 18,
+    textAlign: 'center',
+    fontFamily: "BioSans-Bold"
   },
 });

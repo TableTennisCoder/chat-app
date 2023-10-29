@@ -1,18 +1,14 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  KeyboardAvoidingView,
-} from "react-native";
-import {useState} from "react";
-import {auth} from "../firebase";
-import {signInWithEmailAndPassword} from "firebase/auth";
-import {useNavigation} from "@react-navigation/native";
+import { StyleSheet, Text, View, KeyboardAvoidingView } from "react-native";
+import { useState } from "react";
+import { auth } from "../firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { useNavigation } from "@react-navigation/native";
 
+import Background from "../components/ui/Background";
 import PrimaryButton from "../components/ui/Buttons/PrimaryButton";
 import CustomInput from "../components/ui/Inputs/CustomInput";
 import TertiaryButton from "../components/ui/Buttons/TertiaryButton";
+import SecondaryButton from "../components/ui/Buttons/SecondaryButton";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -28,32 +24,32 @@ const LoginScreen = () => {
 
   return (
     <KeyboardAvoidingView style={styles.loginScreen} behavior="padding">
-      <View style={styles.loginScreen__content}>
-        <Text style={styles.heading}>Login</Text>
-        <CustomInput
-          placeholder="Email"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-          keyboardType="email-address"
-        />
-        <CustomInput
-          placeholder="Password"
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          isPassword
-        />
-        <PrimaryButton onPress={handleLogin}>Login</PrimaryButton>
-        <TertiaryButton
-          text="Don't have an account?"
-          buttonCaption="Sign Up"
-          onPress={() => navigation.replace("Signup")}
-          style={{marginTop: 15}}
-        />
-      </View>
-      <Image
-        source={require("../assets/images/loginSignup.png")}
-        style={styles.image}
-      />
+      <Background>
+        <View style={styles.loginScreen__content}>
+          <Text style={styles.heading}>ACCOUNT LOGIN</Text>
+          <CustomInput
+            placeholder="Email Address"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+            keyboardType="email-address"
+          />
+          <CustomInput
+            placeholder="Password"
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            isPassword
+          />
+          <PrimaryButton onPress={handleLogin}>LOGIN</PrimaryButton>
+          <TertiaryButton
+            text="Don't have an account?"
+            buttonCaption="Sign Up"
+            onPress={() => navigation.replace("Signup")}
+            style={{ marginTop: 15 }}
+          />
+          <Text style={styles.infoText}>Forgot your password?</Text>
+          <SecondaryButton>RESET PASSWORD</SecondaryButton>
+        </View>
+      </Background>
     </KeyboardAvoidingView>
   );
 };
@@ -63,7 +59,6 @@ export default LoginScreen;
 const styles = StyleSheet.create({
   loginScreen: {
     flex: 1,
-    backgroundColor: "white",
     alignItems: "center",
   },
   image: {
@@ -73,14 +68,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 35,
-    marginTop: 50,
+    marginTop: 60,
     marginBottom: 15,
-    gap: 15,
+    gap: 20,
   },
   heading: {
-    fontFamily: "Fredoka-Bold",
     fontSize: 28,
-    color: "#335151",
+    color: "white",
     marginBottom: 10,
+    fontFamily: "BioSans-Bold",
+  },
+  infoText: {
+    color: "white",
+    fontFamily: "BioSans-Regular",
+    fontSize: 15,
+    marginTop: 50,
   },
 });
