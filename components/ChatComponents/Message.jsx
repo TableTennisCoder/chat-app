@@ -1,6 +1,7 @@
 import {StyleSheet, Text, View} from "react-native";
+import { convertToGermanTime } from "../../helper";
 
-const Message = ({children, isMyMessage}) => {
+const Message = ({children, isMyMessage, time}) => {
   return (
     <View
       style={[
@@ -9,6 +10,7 @@ const Message = ({children, isMyMessage}) => {
       ]}
     >
       <Text style={styles.message__text}>{children}</Text>
+      <Text style={styles.message__time}>{convertToGermanTime(time)}</Text>
     </View>
   );
 };
@@ -37,5 +39,14 @@ const styles = StyleSheet.create({
   message__text: {
     color: "white",
     fontSize: 16,
+    fontFamily: "BioSans-Regular"
   },
+  message__time: {
+    marginTop: 5,
+    color: "white",
+    fontFamily: "BioSans-Regular",
+    fontSize: 12,
+    textAlign: "right",
+    opacity: 0.6
+  }
 });

@@ -1,19 +1,34 @@
-import { StyleSheet, View, KeyboardAvoidingView, Text } from "react-native";
-import { useState } from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Alert,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
+import {useState} from "react";
 
-import { auth, db } from "../firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { setDoc, doc } from "firebase/firestore";
-import { useNavigation } from "@react-navigation/native";
+import {auth, db} from "../firebase";
+import {createUserWithEmailAndPassword} from "firebase/auth";
+import {setDoc, doc} from "firebase/firestore";
+import {useNavigation} from "@react-navigation/native";
 
+import {errorMessage} from "../getFirebaseErrorMessages";
+import AvatarModal from "../components/AvatarModal";
+import Onboarding from "react-native-onboarding-swiper";
 import Background from "../components/ui/Background";
 import CustomInput from "../components/ui/Inputs/CustomInput";
 import PrimaryButton from "../components/ui/Buttons/PrimaryButton";
+import SecondaryButton from "../components/ui/Buttons/SecondaryButton";
 import TertiaryButton from "../components/ui/Buttons/TertiaryButton";
 
 const SignupScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [userName, setUserName] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
+  const [errorStyle, setErrorStyle] = useState(false);
 
   const navigation = useNavigation();
 
@@ -21,19 +36,23 @@ const SignupScreen = () => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
+
         addUserToFirestore(
           user.uid,
-          "Maxiboy",
+          userName,
           email,
-          "https://randomuser.me/api/portraits/men/91.jpg",
+          avatarUrl,
           "These sentences are commonly used as placeholders or for testing purposes and don't have any specific meaning"
         );
       })
-      .catch((error) => console.log(error.message));
+      .catch((error) => {
+        Alert.alert("Signup Failed!", errorMessage(error.code), [{text: "OK"}]);
+        setErrorStyle(true);
+      });
   };
 
   // Add new user to Firestore
-  async function addUserToFirestore(uid, name, email, avatar, lastMessage) {
+  async function addUserToFirestore(uid, name, email, avatar = "https://randomuser.me/api/portraits/med/men/83.jpg", lastMessage) {
     await setDoc(doc(db, "Users", uid), {
       id: uid,
       name: name,
@@ -44,32 +63,49 @@ const SignupScreen = () => {
   }
 
   return (
-    <KeyboardAvoidingView style={styles.loginScreen} behavior="height">
-      <Background>
+    <Background>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={styles.loginScreen__content}>
           <Text style={styles.heading}>REGISTER</Text>
           <CustomInput
-            placeholder="Email"
+            placeholder="Email Address"
             value={email}
             onChangeText={(text) => setEmail(text)}
             keyboardType="email-address"
+            errorStyle={errorStyle}
           />
           <CustomInput
             placeholder="Password"
             value={password}
             onChangeText={(text) => setPassword(text)}
             isPassword
+            errorStyle={errorStyle}
+          />
+          <CustomInput
+            placeholder="Username"
+            value={userName}
+            onChangeText={(text) => setUserName(text)}
+            keyboardType="default"
+            errorStyle={errorStyle}
+          />
+          <SecondaryButton onPress={() => setIsVisible(true)}>
+            Choose your Avatar
+          </SecondaryButton>
+          <AvatarModal
+            isVisible={isVisible}
+            closeModal={() => setIsVisible(false)}
+            getAvatar={(url) => setAvatarUrl(url)}
           />
           <PrimaryButton onPress={handleSignup}>REGISTER NOW</PrimaryButton>
           <TertiaryButton
             text="Already have an account?"
             buttonCaption="Login"
             onPress={() => navigation.replace("Login")}
-            style={{ marginTop: 15 }}
+            style={{marginTop: 15}}
           />
         </View>
-      </Background>
-    </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
+    </Background>
   );
 };
 
@@ -97,5 +133,10 @@ const styles = StyleSheet.create({
     color: "white",
     marginBottom: 10,
     fontFamily: "BioSans-Bold",
+  },
+  text: {
+    color: "white",
+    fontFamily: "BioSans-SemiBold",
+    fontSize: 18,
   },
 });

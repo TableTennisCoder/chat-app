@@ -15,7 +15,7 @@ const Contact = ({contact}) => {
       <View style={styles.container}>
         <Image source={{uri: contact.avatar}} style={styles.image} />
         <View style={styles.messageContainer}>
-          <Text style={styles.name}>{contact.email}</Text>
+          <Text style={styles.name}>{contact.name}</Text>
           <View style={styles.messageWrapper}>
             <Text style={styles.message} numberOfLines={2} ellipsizeMode="tail">
               {contact.lastMessage}

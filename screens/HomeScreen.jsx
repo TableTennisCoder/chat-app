@@ -1,15 +1,14 @@
-import { View, Text, Button, StyleSheet } from "react-native";
-import { useEffect, useState } from "react";
-import { auth } from "../firebase";
-import { getAuth, signOut } from "firebase/auth";
-import { useNavigation } from "@react-navigation/native";
-import { AntDesign } from "@expo/vector-icons";
+import {View, Text, Button, StyleSheet} from "react-native";
+import {useEffect, useState} from "react";
+import {auth} from "../firebase";
+import {getAuth, signOut} from "firebase/auth";
+import {useNavigation} from "@react-navigation/native";
+import {AntDesign} from "@expo/vector-icons";
 
-import { SearchBar } from "@rneui/themed";
+import {SearchBar} from "@rneui/themed";
 import ContactsContainer from "../components/HomeComponents/ContactsContainer";
 import ModalNewFriend from "../components/HomeComponents/ModalNewFriend";
 import Background from "../components/ui/Background";
-
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -21,6 +20,10 @@ const HomeScreen = () => {
     setUser(getAuth().currentUser);
   }, []);
 
+  function handleChangeInput(text) {
+    setUserInput(text);
+  }
+
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
@@ -31,33 +34,33 @@ const HomeScreen = () => {
 
   return (
     <Background>
-    <View style={styles.wrapper}>
-      <View style={styles.wrapper__header}>
-        <Text style={styles.header__caption}>Chats</Text>
-        <AntDesign
-          name="adduser"
-          size={30}
-          color="white"
-          onPress={() => setIsVisible(true)}
+      <View style={styles.wrapper}>
+        <View style={styles.wrapper__header}>
+          <Text style={styles.header__caption}>Chats</Text>
+          <AntDesign
+            name="adduser"
+            size={30}
+            color="white"
+            onPress={() => setIsVisible(true)}
+          />
+          <ModalNewFriend
+            isVisible={isVisible}
+            closeModalHandler={() => setIsVisible(false)}
+            getRoomIdHandler={(id) => setRoomId(id)}
+          />
+        </View>
+        <SearchBar
+          placeholder="Suchen"
+          value={userInput}
+          onChangeText={handleChangeInput}
+          platform="ios"
+          containerStyle={{backgroundColor: "transparent"}}
+          inputContainerStyle={{backgroundColor: "#27282A"}}
+          inputStyle={{color: "white"}}
         />
-        <ModalNewFriend
-          isVisible={isVisible}
-          closeModalHandler={() => setIsVisible(false)}
-          getRoomIdHandler={(id) => setRoomId(id)}
-        />
+        <ContactsContainer />
+        <Button title="Ausloggen" onPress={handleLogout} />
       </View>
-      <SearchBar
-        placeholder="Suchen"
-        value={userInput}
-        onChangeText={(text) => setUserInput(text)}
-        platform="ios"
-        containerStyle={{ backgroundColor: "transparent" }}
-        inputContainerStyle={{ backgroundColor: "#27282A" }}
-        inputStyle={{ color: "white" }}
-      />
-      <ContactsContainer/>
-      <Button title="Ausloggen" onPress={handleLogout} />
-    </View>
     </Background>
   );
 };

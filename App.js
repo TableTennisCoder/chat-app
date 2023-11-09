@@ -54,12 +54,12 @@ export default function App() {
   function BottomTabs() {
     return (
       <BottomTab.Navigator screenOptions={{
-        tabBarStyle: { height: 60},
+        tabBarStyle: { height: 100},
         tabBarLabelStyle: { marginBottom: 8, fontSize: 12 },
         tabBarIconStyle: { marginTop: 8}
       }}>
         <BottomTab.Screen name="Home" component={HomeScreen} options={{
-          tabBarIcon: ({color, size}) => <AntDesign name="message1" size={26} color={color} />,
+          tabBarIcon: ({color, size}) => <AntDesign name="home" size={26} color={color} />,
           tabBarLabel: 'Home',
           headerShown: false
         }} />
@@ -72,7 +72,7 @@ export default function App() {
           tabBarLabel: 'Camera'
         }} />
         <BottomTab.Screen name="Settings" component={Settings} options={{
-          tabBarIcon: ({color, size}) => <AntDesign name="setting" size={26} color={color} />,
+          tabBarIcon: ({color, size}) => <AntDesign name="form" size={26} color={color} />,
           tabBarLabel: 'Settings'
         }} />
       </BottomTab.Navigator>

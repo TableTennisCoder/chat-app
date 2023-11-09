@@ -5,10 +5,10 @@ import {
   KeyboardAvoidingView,
   Keyboard,
 } from "react-native";
-import { useState, useEffect, useLayoutEffect, useRef } from "react";
-import { useNavigation } from "@react-navigation/native";
-import { db } from "../firebase";
-import { getAuth } from "firebase/auth";
+import {useState, useEffect, useLayoutEffect, useRef} from "react";
+import {useNavigation} from "@react-navigation/native";
+import {db} from "../firebase";
+import {getAuth} from "firebase/auth";
 import {
   collection,
   addDoc,
@@ -23,7 +23,7 @@ import SendMessage from "../components/ChatComponents/SendMessage";
 import Message from "../components/ChatComponents/Message";
 import ProfileImageHeader from "../components/ChatComponents/ProfileImageHeader";
 
-const Chat = ({ route }) => {
+const Chat = ({route}) => {
   const userId = route.params.userInfos.id;
   const userName = route.params.userInfos.email;
   const avatar = route.params.userInfos.avatar;
@@ -45,40 +45,55 @@ const Chat = ({ route }) => {
 
   // ***** GET THE ROOM ID ***** //
   useEffect(() => {
-    // Create a reference to the ChatRooms collection
-    const chatRoomsRef = collection(db, "ChatRooms");
+    async function getRoomId() {
+      // Create a reference to the ChatRooms collection
+      const chatRoomsRef = collection(db, "ChatRooms");
 
-    // Create a query to find the chat room where both users are participants
-    const q = query(
-      chatRoomsRef,
-      where("participants", "array-contains", userId),
-      where("isGroup", "==", false)
-    );
+      // // Create a query to find chat rooms where the user is a participant
+      const queryUser = query(
+        chatRoomsRef,
+        where("participants", "array-contains", userId)
+      );
 
-    // Subscribe to the query to get the chat room(s) that match the condition
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      snapshot.forEach((doc) => {
-        setRoomId(doc.id);
+      // Create a query to find chat rooms where I am a participant
+      const queryMyId = query(
+        chatRoomsRef,
+        where("participants", "array-contains", myId)
+      );
+
+      // combine the queries and get the chat where we both are in
+      const unsubscribe = onSnapshot(queryUser, (snapshot) => {
+        onSnapshot(queryMyId, (mySnapshot) => {
+          snapshot.forEach((userDoc) => {
+            mySnapshot.forEach((myDoc) => {
+              if (userDoc.id === myDoc.id) {
+                setRoomId(userDoc.id);
+              }
+            });
+          });
+        });
       });
-    });
+    }
 
-    return () => {
-      unsubscribe();
-    };
+    getRoomId();
   }, [userId, myId]);
 
   // ***** SEND MESSAGES -> STORE THEM IN FIRESTORE ***** //
   async function addMessageToFirestore() {
-    const messageColl = collection(db, "Messages");
-    await addDoc(messageColl, {
-      text: userInput,
-      sender: myId,
-      timestamp: Date.now(),
-      chatRoomId: roomId,
-    });
+    if (roomId && userInput !== "") {
+      const messageColl = collection(db, "Messages");
+      await addDoc(messageColl, {
+        text: userInput,
+        sender: myId,
+        timestamp: Date.now(),
+        chatRoomId: roomId,
+      });
 
-    setUserInput("");
-    Keyboard.dismiss();
+      setUserInput("");
+      Keyboard.dismiss();
+    } else {
+      console.log("RoomID is null, cannot send message");
+    }
   }
 
   // ***** RETREIVE REAL TIME UPDATES FROM FIRSTORE AND DISPLAY ***** //
@@ -111,7 +126,10 @@ const Chat = ({ route }) => {
   // ***** DISPLAY THE MESSAGES ***** //
   function displayMessages(itemData) {
     return (
-      <Message isMyMessage={itemData.item.sender === myId ? true : false}>
+      <Message
+        isMyMessage={itemData.item.sender === myId ? true : false}
+        time={itemData.item.timestamp}
+      >
         {itemData.item.text}
       </Message>
     );
@@ -121,7 +139,7 @@ const Chat = ({ route }) => {
     <Background>
       <View style={styles.wrapper}>
         <KeyboardAvoidingView
-          style={{ flex: 1 }}
+          style={{flex: 1}}
           behavior="padding"
           keyboardVerticalOffset={70}
         >
@@ -132,7 +150,7 @@ const Chat = ({ route }) => {
             renderItem={displayMessages}
             style={styles.chatSection}
             onContentSizeChange={() =>
-              flatListRef.current.scrollToEnd({ animated: true })
+              flatListRef.current.scrollToEnd({animated: true})
             }
           />
           <View style={styles.sendSection}>

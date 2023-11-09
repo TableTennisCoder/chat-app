@@ -10,7 +10,7 @@ import { getAuth } from "firebase/auth";
 import { collection, addDoc } from "firebase/firestore";
 import CustomInput from "../ui/Inputs/CustomInput";
 
-const ModalNewFriend = ({ isVisible, closeModalHandler, getRoomIdHandler }) => {
+const ModalNewFriend = ({ isVisible, closeModalHandler }) => {
   const currUser = getAuth().currentUser;
   const [friendId, setFriendId] = useState("");
 

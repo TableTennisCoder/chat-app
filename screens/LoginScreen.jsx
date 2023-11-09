@@ -1,9 +1,17 @@
-import { StyleSheet, Text, View, KeyboardAvoidingView } from "react-native";
-import { useState } from "react";
-import { auth } from "../firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { useNavigation } from "@react-navigation/native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Alert,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
+import {useState} from "react";
+import {auth} from "../firebase";
+import {signInWithEmailAndPassword} from "firebase/auth";
+import {useNavigation} from "@react-navigation/native";
 
+import {errorMessage} from "../getFirebaseErrorMessages";
 import Background from "../components/ui/Background";
 import PrimaryButton from "../components/ui/Buttons/PrimaryButton";
 import CustomInput from "../components/ui/Inputs/CustomInput";
@@ -13,18 +21,29 @@ import SecondaryButton from "../components/ui/Buttons/SecondaryButton";
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorStyle, setErrorStyle] = useState(false);
 
   const navigation = useNavigation();
 
   const handleLogin = () => {
-    signInWithEmailAndPassword(auth, email, password).then(() => {
-      navigation.replace("HomeScreen");
-    });
+    setErrorStyle(false);
+    signInWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        navigation.replace("HomeScreen");
+      })
+      .catch((error) => {
+        Alert.alert("Login Failed!", errorMessage(error.code), [
+          {
+            text: "OK",
+          },
+        ]);
+        setErrorStyle(true);
+      });
   };
 
   return (
-    <KeyboardAvoidingView style={styles.loginScreen} behavior="padding">
-      <Background>
+    <Background>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={styles.loginScreen__content}>
           <Text style={styles.heading}>ACCOUNT LOGIN</Text>
           <CustomInput
@@ -32,25 +51,27 @@ const LoginScreen = () => {
             value={email}
             onChangeText={(text) => setEmail(text)}
             keyboardType="email-address"
+            errorStyle={errorStyle}
           />
           <CustomInput
             placeholder="Password"
             value={password}
             onChangeText={(text) => setPassword(text)}
             isPassword
+            errorStyle={errorStyle}
           />
           <PrimaryButton onPress={handleLogin}>LOGIN</PrimaryButton>
           <TertiaryButton
             text="Don't have an account?"
             buttonCaption="Sign Up"
             onPress={() => navigation.replace("Signup")}
-            style={{ marginTop: 15 }}
+            style={{marginTop: 15}}
           />
           <Text style={styles.infoText}>Forgot your password?</Text>
           <SecondaryButton>RESET PASSWORD</SecondaryButton>
         </View>
-      </Background>
-    </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
+    </Background>
   );
 };
 
